@@ -22,6 +22,7 @@ const app: PIXI.Application = new PIXI.Application({
 const backgroundContainer = new PIXI.Container();
 const handleContainer = new PIXI.Container();
 const endingContainer = new PIXI.Container();
+const glitters: PIXI.Sprite[] = [];
 let textWheelRadius = 120;
 
 app.stage.addChild(backgroundContainer);
@@ -46,9 +47,17 @@ PIXI.Assets.load(["background", "doorClosed", "handle", "handleShadow", "enterCo
 
     setupHandle(bgTexture.handle, bgTexture.handleShadow, handleContainer);
 
-    loadImageToContainer(bgTexture.glitter, -160, -40, 10, endingContainer);
-    loadImageToContainer(bgTexture.glitter, -120, 160, 10, endingContainer);
-    loadImageToContainer(bgTexture.glitter, 160, 80, 10, endingContainer);
+    glitters.push( loadImageToContainer(bgTexture.glitter, -160, -40, 10, endingContainer));
+    glitters.push( loadImageToContainer(bgTexture.glitter, -120, 160, 10, endingContainer));
+    glitters.push( loadImageToContainer(bgTexture.glitter, 160, 80, 10, endingContainer));
+
+    glitters.forEach(value => {
+        gsap.to(value, {
+            pixi: {rotation: 360 * (Math.random() - 0.5)},
+            duration: 10,
+            repeat: -1,
+        });
+    });
 
     let endText = new PIXI.Text("You WIN!!", new PIXI.TextStyle({
         fontFamily: 'Arial',
