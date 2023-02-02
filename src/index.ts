@@ -45,7 +45,6 @@ PIXI.Assets.load(["background", "doorClosed", "handle", "handleShadow", "enterCo
 	loadImageToContainer(bgTexture.doorClosed, 28, -12, 3, backgroundContainer);
 
 	SetupHandle(bgTexture.handle, bgTexture.handleShadow, handleContainer);
-	setupVault(bgTexture.enterCodeButton, backgroundContainer, handleContainer, endScreen, app);
 
 	loadImageToContainer(bgTexture.glitter, -160, -40 ,10, endScreen );
 	loadImageToContainer(bgTexture.glitter, -120, 160 ,10, endScreen );
@@ -72,6 +71,8 @@ PIXI.Assets.load(["background", "doorClosed", "handle", "handleShadow", "enterCo
 	endText.anchor.set(0.5,0.5);
 	endText.position.set(window.innerWidth / 2, window.innerHeight / 2 - window.innerHeight / 3);
 	endScreen.addChild(endText);
+
+	setupVault(bgTexture.enterCodeButton, backgroundContainer, handleContainer, endScreen, app);
 	//console.log(backgroundContainer);
 });
 
