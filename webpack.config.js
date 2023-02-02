@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -70,7 +69,7 @@ module.exports = (env, argv) => {
         plugins: [
             // Copy our static assets to the final build
             new CopyPlugin({
-                patterns: [{ from: 'static/' }],
+                patterns: [{ from: 'assets/' }],
             }),
 
             // Make an index.html from the template
