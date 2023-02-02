@@ -7,6 +7,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
+    "gsap": "^3.11.4",
     "pixi.js": "^7.1.1"
   },
   "devDependencies": {
