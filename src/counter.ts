@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 let timeText: PIXI.Text;
 let timerInSeconds = 0;
 let appCache: PIXI.Application;
+let isTimerActive = false;
 
 export function setupTimer(app: PIXI.Application) {
     appCache = app;
@@ -38,11 +39,17 @@ export function trackTime() {
 }
 
 export function addTimerToTicker() {
-    appCache.ticker.add(trackTime);
+    if(!isTimerActive) {
+        appCache.ticker.add(trackTime);
+        isTimerActive = true;
+    }
 }
 
 export function removeTimerToTicker() {
-    appCache.ticker.remove(trackTime);
+    if(isTimerActive) {
+        appCache.ticker.remove(trackTime);
+        isTimerActive = false;
+    }
 }
 
 export function resetTimer() {
