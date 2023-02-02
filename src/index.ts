@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import {gsap} from "gsap";
 import {PixiPlugin} from "gsap/PixiPlugin";
+import {addTimerToTicker, removeTimerToTicker, resetTimer, setupTimer} from "./counter";
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -44,7 +45,6 @@ let secretWheelCombo: keyCombo[] = [
 	{secretKey: 1, direction: KeyDirections.Left, rotation: 0},
 ]
 let endGameTimeoutSeconds = 0;
-let timer = 0;
 
 console.log(keyComboAnswer);
 
@@ -208,7 +208,7 @@ async function openVault() {
 		secretWheels.forEach(value => app.stage.removeChild(value));
 
 		app.stage.addChild(endScreen);
-		app.ticker.remove(trackTime);
+		removeTimerToTicker();
 
 		app.ticker.add(resetAfter);
 	} else {
@@ -234,8 +234,7 @@ function resetVault() {
 	}
 	keyComboAnswer = CreateRandomKeyCombo(keyComboCount);
 	gsap.to(handleSprite, {pixi: {rotation: 999}, duration: 1});
-	app.ticker.add(trackTime);
-	timer = 0;
+	addTimerToTicker();
 }
 
 async function resetAfter() {
@@ -254,12 +253,8 @@ async function resetAfter() {
 		app.ticker.remove(resetAfter);
 		resetVault();
 		endGameTimeoutSeconds = 0;
+		resetTimer();
 	}
-}
-
-function trackTime() {
-	timer += app.ticker.elapsedMS / 1000;
-	time.text = new Date(timer * 1000).toISOString().slice(11, 19);
 }
 
 PIXI.Assets.add("background", "bg.png");
@@ -358,8 +353,4 @@ PIXI.Assets.load(["wheelShield", "wheelShieldLeft", "wheelShieldRight"]).then(te
 	secretWheels.forEach(value => app.stage.addChild(value))
 });
 
-const time = new PIXI.Text(0, style);
-time.position.set(window.innerWidth / 2 - window.innerWidth / 5, window.innerHeight / 2 - window.innerHeight / 17);
-time.anchor.set(0.5,0.5);
-app.ticker.add(trackTime);
-app.stage.addChild(time);
+setupTimer(app);
