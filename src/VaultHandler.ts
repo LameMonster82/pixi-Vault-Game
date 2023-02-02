@@ -19,14 +19,14 @@ let handleContainer: Container;
 let endScreenContainer: Container;
 let keyComboAnswer: KeyDescriptor[];
 
-function openVault() {
+async function openVault() {
     for (let i = 0; i < secretWheelCombo.length; i++) {
         finishRotatingWheels(i);
     }
 
     if (checkCode()) {
         let door = backgroundContainer.children.find(value => value.name === "doorClosed") as PIXI.Sprite;
-        PIXI.Assets.load("doorOpened").then(value => door.texture = value.doorOpened);
+        door.texture = await PIXI.Assets.load("doorOpened");
         door.position.set(window.innerWidth / 2 + window.innerWidth / 4, window.innerHeight / 2);
         door.name = "doorOpened";
 
@@ -65,11 +65,11 @@ function resetVault(): KeyDescriptor[] {
     return CreateRandomKeyCombo(secretWheelCombo.length);
 }
 
-function resetAfter() {
+async function resetAfter() {
     endGameTimeoutSeconds += app.ticker.deltaMS / 1000;
     if (endGameTimeoutSeconds >= 5) {
         let door = backgroundContainer.children.find(value => value.name === "doorOpened") as PIXI.Sprite;
-        PIXI.Assets.load("doorClosed").then(value => door.texture = value.doorClosed);
+        door.texture = await PIXI.Assets.load("doorClosed");
         door.position.set(window.innerWidth / 2 + 28, window.innerHeight / 2 - 12);
         door.name = "doorClosed";
 
