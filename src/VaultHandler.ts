@@ -39,6 +39,7 @@ function openVault() {
         app.ticker.add(resetAfter);
     } else {
         keyComboAnswer = resetVault();
+        console.log(keyComboAnswer);
     }
 }
 
@@ -81,6 +82,8 @@ function resetAfter() {
         keyComboAnswer = resetVault();
         endGameTimeoutSeconds = 0;
         resetTimer();
+
+        console.log(keyComboAnswer);
     }
 }
 
