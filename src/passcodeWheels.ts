@@ -43,7 +43,7 @@ export let secretWheelCombo: KeyDescriptor[] = [
 ]
 export const secretWheels: PIXI.Container[] = [];
 
-export function CreateRandomKeyCombo(keyComboLenght: number): KeyDescriptor[] {
+export function randomCombo(keyComboLenght: number): KeyDescriptor[] {
     let answer: KeyDescriptor[] = [];
     for (let i = 0; i < keyComboLenght; i++) {
         let randomCombo: KeyDescriptor = {
@@ -57,7 +57,7 @@ export function CreateRandomKeyCombo(keyComboLenght: number): KeyDescriptor[] {
     return answer;
 }
 
-export function createPasscodeWheels(radius: number, x: number, y: number): PIXI.Container {
+export function createComboWheel(radius: number, x: number, y: number): PIXI.Container {
     let newWheel: PIXI.Container = new PIXI.Container();
     newWheel.pivot.set(window.innerWidth / 2, window.innerHeight / 2);
     newWheel.position.set(x, y);
@@ -79,7 +79,7 @@ export function createPasscodeWheels(radius: number, x: number, y: number): PIXI
     return newWheel;
 }
 
-export function finishRotatingWheels(index: number) {
+export function finalizeComboWheels(index: number) {
     let degrees = secretWheelCombo[index].rotation * 180 / Math.PI;
 
     let newDegrees = closestNumber(degrees, 40);
@@ -106,14 +106,14 @@ export function finishRotatingWheels(index: number) {
     secretWheelCombo[index].secretKey = Math.round(key);
 }
 
-export function SetupWheels(wheelRadius: number, secretWheels: Container[], app: Application) {
+export function setupComboWheels(wheelRadius: number, secretWheels: Container[], app: Application) {
     PIXI.Assets.load(["wheelShield", "wheelShieldLeft", "wheelShieldRight"]).then(texture => {
         for (let i = -1; i < 2; i++) {
             let wheelContainer = new PIXI.Container();
 
             let positionx = window.innerWidth / 2 + (window.innerWidth / 4 * i);
             let positiony = window.innerHeight / 2 - window.innerHeight / 3;
-            let secretWheelText = createPasscodeWheels(wheelRadius, positionx,
+            let secretWheelText = createComboWheel(wheelRadius, positionx,
                 positiony);
             //secretWheelText.pivot.set(positionx,positiony);
 

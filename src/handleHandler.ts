@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import {Container, Sprite} from "pixi.js";
-import {finishRotatingWheels, KeyDirections, secretWheelCombo, secretWheels, wheelIndex} from "./passcodeWheels";
+import {finalizeComboWheels, KeyDirections, secretWheelCombo, secretWheels, wheelIndex} from "./passcodeWheels";
 import {loadImageToContainer} from "./utilities";
 
 export let handleSprite: Sprite;
@@ -29,11 +29,11 @@ function rotateHandle(event: PIXI.FederatedPointerEvent) {
 
         handleSprite.rotation += newRotation;
     } else {
-        finishRotatingWheels(wheelIndex);
+        finalizeComboWheels(wheelIndex);
     }
 }
 
-export function SetupHandle(handle: string, handleShadow: string, handleContainer: Container): Sprite {
+export function setupHandle(handle: string, handleShadow: string, handleContainer: Container): Sprite {
     handleSprite = loadImageToContainer(handleShadow, 0, 0, 9, handleContainer);
     let handleSpriteReal = loadImageToContainer(handle, -10, -12, 3.9, handleSprite);
 

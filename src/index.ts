@@ -2,8 +2,8 @@ import * as PIXI from 'pixi.js';
 import {gsap} from "gsap";
 import {PixiPlugin} from "gsap/PixiPlugin";
 import {setupTimer} from "./counter";
-import {secretWheels, SetupWheels} from "./passcodeWheels";
-import {SetupHandle} from "./handleHandler";
+import {secretWheels, setupComboWheels} from "./passcodeWheels";
+import {setupHandle} from "./handleHandler";
 import {loadImageToContainer} from "./utilities";
 import {setupVault} from "./VaultHandler";
 
@@ -21,8 +21,8 @@ const app: PIXI.Application = new PIXI.Application({
 
 const backgroundContainer = new PIXI.Container();
 const handleContainer = new PIXI.Container();
-const endScreen = new PIXI.Container();
-let wheelRadius = 120;
+const endingContainer = new PIXI.Container();
+let textWheelRadius = 120;
 
 app.stage.addChild(backgroundContainer);
 app.stage.addChild(handleContainer);
@@ -44,11 +44,11 @@ PIXI.Assets.load(["background", "doorClosed", "handle", "handleShadow", "enterCo
     loadImageToContainer(bgTexture.background, 0, 0, 1, backgroundContainer);
     loadImageToContainer(bgTexture.doorClosed, 28, -12, 3, backgroundContainer);
 
-    SetupHandle(bgTexture.handle, bgTexture.handleShadow, handleContainer);
+    setupHandle(bgTexture.handle, bgTexture.handleShadow, handleContainer);
 
-    loadImageToContainer(bgTexture.glitter, -160, -40, 10, endScreen);
-    loadImageToContainer(bgTexture.glitter, -120, 160, 10, endScreen);
-    loadImageToContainer(bgTexture.glitter, 160, 80, 10, endScreen);
+    loadImageToContainer(bgTexture.glitter, -160, -40, 10, endingContainer);
+    loadImageToContainer(bgTexture.glitter, -120, 160, 10, endingContainer);
+    loadImageToContainer(bgTexture.glitter, 160, 80, 10, endingContainer);
 
     let endText = new PIXI.Text("You WIN!!", new PIXI.TextStyle({
         fontFamily: 'Arial',
@@ -70,11 +70,10 @@ PIXI.Assets.load(["background", "doorClosed", "handle", "handleShadow", "enterCo
     }));
     endText.anchor.set(0.5, 0.5);
     endText.position.set(window.innerWidth / 2, window.innerHeight / 2 - window.innerHeight / 3);
-    endScreen.addChild(endText);
+    endingContainer.addChild(endText);
 
-    setupVault(bgTexture.enterCodeButton, backgroundContainer, handleContainer, endScreen, app);
-    //console.log(backgroundContainer);
+    setupVault(bgTexture.enterCodeButton, backgroundContainer, handleContainer, endingContainer, app);
 });
 
-SetupWheels(wheelRadius, secretWheels, app);
+setupComboWheels(textWheelRadius, secretWheels, app);
 setupTimer(app);

@@ -1,45 +1,45 @@
 import {
-    CreateRandomKeyCombo,
-    finishRotatingWheels,
+    finalizeComboWheels,
     KeyDescriptor,
     KeyDirections,
+    randomCombo,
     secretWheelCombo,
     secretWheels
 } from "./passcodeWheels";
 import * as PIXI from "pixi.js";
 import {Application, Container} from "pixi.js";
-import {addTimerToTicker, removeTimerToTicker, resetTimer} from "./counter";
+import {resetTimer, startGameTimer, stopGameTimer} from "./counter";
 import {gsap} from "gsap";
 import {handleSprite} from "./handleHandler";
 
-let app: Application;
-let endGameTimeoutSeconds = 0;
+let pixiApp: Application;
+let endGameTimeKeeper = 0;
 let backgroundContainer: Container;
 let handleContainer: Container;
 let endScreenContainer: Container;
-let keyComboAnswer: KeyDescriptor[];
+let secretComboAnswer: KeyDescriptor[];
 
-async function openVault() {
+async function tryOpenVault() {
     for (let i = 0; i < secretWheelCombo.length; i++) {
-        finishRotatingWheels(i);
+        finalizeComboWheels(i);
     }
 
-    if (checkCode()) {
-        let door = backgroundContainer.children.find(value => value.name === "doorClosed") as PIXI.Sprite;
-        door.texture = await PIXI.Assets.load("doorOpened");
-        door.position.set(window.innerWidth / 2 + window.innerWidth / 4, window.innerHeight / 2);
-        door.name = "doorOpened";
+    if (checkCombo()) {
+        let vaultDoor = backgroundContainer.children.find(value => value.name === "doorClosed") as PIXI.Sprite;
+        vaultDoor.texture = await PIXI.Assets.load("doorOpened");
+        vaultDoor.position.set(window.innerWidth / 2 + window.innerWidth / 4, window.innerHeight / 2);
+        vaultDoor.name = "doorOpened";
 
-        app.stage.removeChild(handleContainer);
-        secretWheels.forEach(value => app.stage.removeChild(value));
+        pixiApp.stage.removeChild(handleContainer);
+        secretWheels.forEach(value => pixiApp.stage.removeChild(value));
 
-        app.stage.addChild(endScreenContainer);
-        removeTimerToTicker();
+        pixiApp.stage.addChild(endScreenContainer);
+        stopGameTimer();
 
-        app.ticker.add(resetAfter);
+        pixiApp.ticker.add(resetAfterWin);
     } else {
-        keyComboAnswer = resetVault();
-        console.log(keyComboAnswer);
+        secretComboAnswer = resetVault();
+        console.log(secretComboAnswer);
     }
 }
 
@@ -63,37 +63,37 @@ function resetVault(): KeyDescriptor[] {
         shieldSprite.texture = PIXI.Assets.get("wheelShield");
     }
     gsap.to(handleSprite, {pixi: {rotation: 999}, duration: 1});
-    addTimerToTicker();
+    startGameTimer();
     resetTimer();
-    return CreateRandomKeyCombo(secretWheelCombo.length);
+    return randomCombo(secretWheelCombo.length);
 }
 
-async function resetAfter() {
-    endGameTimeoutSeconds += app.ticker.deltaMS / 1000;
-    if (endGameTimeoutSeconds >= 5) {
+async function resetAfterWin() {
+    endGameTimeKeeper += pixiApp.ticker.deltaMS / 1000;
+    if (endGameTimeKeeper >= 5) {
         let door = backgroundContainer.children.find(value => value.name === "doorOpened") as PIXI.Sprite;
         door.texture = await PIXI.Assets.load("doorClosed");
         door.position.set(window.innerWidth / 2 + 28, window.innerHeight / 2 - 12);
         door.name = "doorClosed";
 
-        app.stage.addChild(handleContainer);
-        secretWheels.forEach(value => app.stage.addChild(value));
+        pixiApp.stage.addChild(handleContainer);
+        secretWheels.forEach(value => pixiApp.stage.addChild(value));
 
-        app.stage.removeChild(endScreenContainer);
+        pixiApp.stage.removeChild(endScreenContainer);
 
-        app.ticker.remove(resetAfter);
-        keyComboAnswer = resetVault();
-        endGameTimeoutSeconds = 0;
+        pixiApp.ticker.remove(resetAfterWin);
+        secretComboAnswer = resetVault();
+        endGameTimeKeeper = 0;
         resetTimer();
 
-        console.log(keyComboAnswer);
+        console.log(secretComboAnswer);
     }
 }
 
-function checkCode(): boolean {
+function checkCombo(): boolean {
     for (let i = 0; i < secretWheelCombo.length; i++) {
-        if (secretWheelCombo[i].secretKey != keyComboAnswer[i].secretKey ||
-            secretWheelCombo[i].direction != keyComboAnswer[i].direction) {
+        if (secretWheelCombo[i].secretKey != secretComboAnswer[i].secretKey ||
+            secretWheelCombo[i].direction != secretComboAnswer[i].direction) {
             console.log("WRONG " + i);
             return false;
         }
@@ -108,18 +108,18 @@ export function setupVault(enterCodeButton: string,
     backgroundContainer = background;
     handleContainer = handle;
     endScreenContainer = endScreen;
-    app = application;
+    pixiApp = application;
 
-    keyComboAnswer = CreateRandomKeyCombo(3);
-    console.log(keyComboAnswer);
+    secretComboAnswer = randomCombo(3);
+    console.log(secretComboAnswer);
 
     let buttonSprite: PIXI.Sprite = PIXI.Sprite.from(enterCodeButton);
     buttonSprite.position.set(window.innerWidth / 2 + window.innerWidth / 4, window.innerHeight / 2);
     buttonSprite.anchor.set(0.5, 0.5);
     buttonSprite.interactive = true;
-    buttonSprite.on('pointerdown', openVault);
+    buttonSprite.on('pointerdown', tryOpenVault);
 
     secretWheels.push(buttonSprite);
-    app.stage.addChild(buttonSprite);
+    pixiApp.stage.addChild(buttonSprite);
 
 }

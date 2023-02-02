@@ -29,7 +29,7 @@ export function setupTimer(app: PIXI.Application) {
     timeText = new PIXI.Text(0, style);
     timeText.position.set(window.innerWidth / 2 - window.innerWidth / 5, window.innerHeight / 2 - window.innerHeight / 17);
     timeText.anchor.set(0.5, 0.5);
-    addTimerToTicker();
+    startGameTimer();
     app.stage.addChild(timeText);
 }
 
@@ -38,14 +38,14 @@ export function trackTime() {
     timeText.text = new Date(timerInSeconds * 1000).toISOString().slice(14, 19);
 }
 
-export function addTimerToTicker() {
+export function startGameTimer() {
     if (!isTimerActive) {
         appCache.ticker.add(trackTime);
         isTimerActive = true;
     }
 }
 
-export function removeTimerToTicker() {
+export function stopGameTimer() {
     if (isTimerActive) {
         appCache.ticker.remove(trackTime);
         isTimerActive = false;
