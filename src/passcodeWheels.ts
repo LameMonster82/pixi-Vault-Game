@@ -8,6 +8,7 @@ export enum KeyDirections {
     Left = "Left",
     Right = "Right"
 }
+
 export interface KeyDescriptor {
     secretKey: number;
     direction: KeyDirections;
@@ -42,7 +43,7 @@ export let secretWheelCombo: KeyDescriptor[] = [
 ]
 export const secretWheels: PIXI.Container[] = [];
 
-export function CreateRandomKeyCombo(keyComboLenght: number): KeyDescriptor[]  {
+export function CreateRandomKeyCombo(keyComboLenght: number): KeyDescriptor[] {
     let answer: KeyDescriptor[] = [];
     for (let i = 0; i < keyComboLenght; i++) {
         let randomCombo: KeyDescriptor = {
@@ -83,20 +84,23 @@ export function finishRotatingWheels(index: number) {
 
     let newDegrees = closestNumber(degrees, 40);
     handleSprite.rotation = (Math.PI / 180) * newDegrees;
-    if(newDegrees > 0) {
+    if (newDegrees > 0) {
         newDegrees = -(360 - newDegrees);
     }
-    if(secretWheelCombo[index].tweenAnim != undefined) {
+    if (secretWheelCombo[index].tweenAnim != undefined) {
         // @ts-ignore
         secretWheelCombo[index].tweenAnim.kill();
     }
 
-    secretWheelCombo[index].tweenAnim = gsap.to(secretWheels[index].children[0] as PIXI.Sprite, {pixi:{rotation: newDegrees}, duration: 1});
+    secretWheelCombo[index].tweenAnim = gsap.to(secretWheels[index].children[0] as PIXI.Sprite, {
+        pixi: {rotation: newDegrees},
+        duration: 1
+    });
     console.log(degrees);
     //secretWheels[index].children[0].rotation = (Math.PI / 180) * newDegrees;
 
     let key = ((Math.abs(degrees) + 40) / 40) - roundDown((Math.abs(degrees) + 40) / 40, 9);
-    if(key === 0)
+    if (key === 0)
         key = 9; //Edge case
 
     secretWheelCombo[index].secretKey = Math.round(key);
@@ -107,7 +111,7 @@ export function SetupWheels(wheelRadius: number, secretWheels: Container[], app:
         for (let i = -1; i < 2; i++) {
             let wheelContainer = new PIXI.Container();
 
-            let positionx = window.innerWidth / 2 + (window.innerWidth / 4 * i) ;
+            let positionx = window.innerWidth / 2 + (window.innerWidth / 4 * i);
             let positiony = window.innerHeight / 2 - window.innerHeight / 3;
             let secretWheelText = createPasscodeWheels(wheelRadius, positionx,
                 positiony);
@@ -116,7 +120,7 @@ export function SetupWheels(wheelRadius: number, secretWheels: Container[], app:
             wheelContainer.pivot.set(positionx, positiony);
             wheelContainer.position.set(positionx, positiony);
             wheelContainer.interactive = true;
-            wheelContainer.on('pointerdown', function (){
+            wheelContainer.on('pointerdown', function () {
                 wheelIndex = (i + 1);
             })
 

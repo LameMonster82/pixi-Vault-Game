@@ -49,12 +49,15 @@ function resetVault(): KeyDescriptor[] {
         secretWheelCombo[j].secretKey = 1;
         secretWheelCombo[j].direction = KeyDirections.Left;
         secretWheelCombo[j].rotation = 0;
-        if(secretWheelCombo[j].tweenAnim != undefined) {
+        if (secretWheelCombo[j].tweenAnim != undefined) {
             // @ts-ignore
             secretWheelCombo[j].tweenAnim.kill()
         }
 
-        secretWheelCombo[j].tweenAnim = gsap.to(secretWheels[j].children[0] as PIXI.Sprite, {pixi:{rotation: 0}, duration: 1});
+        secretWheelCombo[j].tweenAnim = gsap.to(secretWheels[j].children[0] as PIXI.Sprite, {
+            pixi: {rotation: 0},
+            duration: 1
+        });
 
         let shieldSprite = secretWheels[j].children[1] as PIXI.Sprite;
         shieldSprite.texture = PIXI.Assets.get("wheelShield");
@@ -89,7 +92,7 @@ async function resetAfter() {
 
 function checkCode(): boolean {
     for (let i = 0; i < secretWheelCombo.length; i++) {
-        if(secretWheelCombo[i].secretKey != keyComboAnswer[i].secretKey ||
+        if (secretWheelCombo[i].secretKey != keyComboAnswer[i].secretKey ||
             secretWheelCombo[i].direction != keyComboAnswer[i].direction) {
             console.log("WRONG " + i);
             return false;
@@ -100,9 +103,8 @@ function checkCode(): boolean {
 }
 
 export function setupVault(enterCodeButton: string,
-    background: Container,handle: Container,
-    endScreen: Container, application: Application)
-{
+                           background: Container, handle: Container,
+                           endScreen: Container, application: Application) {
     backgroundContainer = background;
     handleContainer = handle;
     endScreenContainer = endScreen;
@@ -112,8 +114,8 @@ export function setupVault(enterCodeButton: string,
     console.log(keyComboAnswer);
 
     let buttonSprite: PIXI.Sprite = PIXI.Sprite.from(enterCodeButton);
-    buttonSprite.position.set(window.innerWidth / 2 + window.innerWidth / 4,window.innerHeight / 2);
-    buttonSprite.anchor.set(0.5,0.5);
+    buttonSprite.position.set(window.innerWidth / 2 + window.innerWidth / 4, window.innerHeight / 2);
+    buttonSprite.anchor.set(0.5, 0.5);
     buttonSprite.interactive = true;
     buttonSprite.on('pointerdown', openVault);
 

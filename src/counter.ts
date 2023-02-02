@@ -28,7 +28,7 @@ export function setupTimer(app: PIXI.Application) {
 
     timeText = new PIXI.Text(0, style);
     timeText.position.set(window.innerWidth / 2 - window.innerWidth / 5, window.innerHeight / 2 - window.innerHeight / 17);
-    timeText.anchor.set(0.5,0.5);
+    timeText.anchor.set(0.5, 0.5);
     addTimerToTicker();
     app.stage.addChild(timeText);
 }
@@ -39,14 +39,14 @@ export function trackTime() {
 }
 
 export function addTimerToTicker() {
-    if(!isTimerActive) {
+    if (!isTimerActive) {
         appCache.ticker.add(trackTime);
         isTimerActive = true;
     }
 }
 
 export function removeTimerToTicker() {
-    if(isTimerActive) {
+    if (isTimerActive) {
         appCache.ticker.remove(trackTime);
         isTimerActive = false;
     }
